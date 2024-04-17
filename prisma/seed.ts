@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function main(){
     const time1 = await prisma.time.upsert({
-        where:{id:0},
+        where:{time:"4/3 12:00"},
         update:{},
         create:{
             id:0,
@@ -15,12 +15,35 @@ async function main(){
                         children:0,
                         adults:1,
                         description: "This is a description",
+                    },
+                    {
+                        name: "lll",
+                        children:2,
+                        adults:2,
                     }
                 ]
             }
         }
     });
-    console.log({time1});
+    const time2 = await prisma.time.upsert({
+        where:{time:"4/3 12:30"},
+        update:{},
+        create:{
+            id:1,
+            time: "4/3 12:30",
+            customers: {
+                create: [
+                    {
+                        name: "bob",
+                        children:1,
+                        adults:0,
+                        description: "Second description",
+                    }
+                ]
+            }
+        }
+    });
+    console.log({time1,time2});
 }
 
 main().then(async () => {
