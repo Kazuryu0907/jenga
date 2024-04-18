@@ -17,6 +17,7 @@ datasource db {
 model Customer{
   id Int @id @default(autoincrement())
   name String
+  ticket_number Int @default(autoincrement())
   children Int
   adults Int
   checked Boolean @default(false)
