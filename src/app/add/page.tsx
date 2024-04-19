@@ -6,7 +6,7 @@ const RequireAsterisk = () => {
   return <a className="text-red-600">*</a>;
 };
 
-const Form = () => {
+const Form = ({onSubmit}:{onSubmit:(event: FormData) => void}) => {
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -115,19 +115,10 @@ const Form = () => {
               </div>
               <button
                 type="submit"
-                className="w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="w-full text-black bg-cyan-500 hover:bg-cyan-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Create an account
+                Submit
               </button>
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Already have an account?{" "}
-                <a
-                  href="#"
-                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                >
-                  Login here
-                </a>
-              </p>
             </form>
           </div>
         </div>
@@ -136,23 +127,13 @@ const Form = () => {
   );
 };
 
-
+import {Success} from './Success';
 
 export default async function Home() {
-    // const customers = prisma.customer.findMany();
-    // const times = prisma.time.findMany();
-    return (
-        <div>
-            {/* <h1 className="font-bold text-2xl">Customer</h1>
-            {(await customers).map((customer,index) => (
-                <div key={customer.id} className="bg-gray-800 m-2 w-[300px]">
-                    <p>id:{customer.id}</p>
-                    <p>name: {customer.name}</p>
-                    <p></p>
-                </div>
-            ))}
-        <br /> */}
-            <Form/>
-        </div>
-    )
+  return (
+    <div>
+      <Form onSubmit={onSubmit}/>
+      {/* <Success/> */}
+    </div>
+  )
 }
