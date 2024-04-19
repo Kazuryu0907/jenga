@@ -1,20 +1,29 @@
 {
+  "type": "module",
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "vite"
   },
   "dependencies": {
     "@prisma/client": "^5.12.1",
     "@prisma/extension-pulse": "^1.0.1",
-    "hono": "^4.2.3"
+    "hono": "^4.2.5",
+    "honox": "^0.1.15"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240405.0",
+    "@hono/vite-cloudflare-pages": "^0.2.5",
+    "@hono/vite-dev-server": "^0.11.0",
     "@types/bun": "latest",
     "@types/node": "^20.12.7",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
     "prisma": "^5.12.1",
+    "tailwindcss": "^3.4.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.9"
   }
 }
