@@ -3,17 +3,26 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "next dev"
   },
   "dependencies": {
     "@prisma/client": "^5.12.1",
     "@prisma/extension-pulse": "^1.0.1",
-    "hono": "^4.2.3"
+    "hono": "^4.2.3",
+    "next": "^14.2.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "^20.12.7",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^14.2.2",
+    "postcss": "^8.4.38",
     "prisma": "^5.12.1",
+    "tailwindcss": "^3.4.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }
