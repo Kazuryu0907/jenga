@@ -1,4 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import {cache} from "react";
+import useSWR from "swr";
 
 export * from "@prisma/client";
 
@@ -12,3 +14,10 @@ globalPrisma.prisma || new PrismaClient({
 if(process.env.NODE_ENV === "production"){
     globalPrisma.prisma = prisma;
 }
+
+// Timesのデータ取得(force-cache)
+// https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries
+export const getTimes = cache(async() => {
+    const times = await prisma.time.findMany();
+    return times;
+});
