@@ -1,10 +1,11 @@
 "use client";
+// !-- ここはClient Componentです！！！------!
+
 import { useFormState,useFormStatus } from "react-dom";
 import type {submitResponse} from "./onSubmit";
 import type { Time } from "@prisma/client";
-import { getTimes } from "@/lib/prismaClient";
-import useSWR from "swr";
-import { Suspense } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { Modal,Button } from "@mantine/core";
 
 const RequireAsterisk = () => {
   return <a className="text-red-600">*</a>;
@@ -24,18 +25,8 @@ const SubmitButton = () => {
   )
 }
 
-const LoadingSelectTime = () => {
-    return(
-        <select
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" id="time"
-            name='time'
-        >
-            <option >Fetching Data...</option>
-        </select>
-    )
-}
 
-
+// DBから取得したTimeのリストをSelectタグに変換
 const SelectTime = ({times}:{times:Time[]}) => {
     return(
             <select
@@ -51,22 +42,22 @@ const SelectTime = ({times}:{times:Time[]}) => {
 }
 
 
-// const SuspenseSelectTime = () => {
-//     return(
-//         <Suspense fallback={<LoadingSelectTime/>}>
-//             <SelectTime/>
-//         </Suspense>
-//     )
-// }
+import {Success} from './Success';
 
-export const Form = ({onSubmit,times}:{onSubmit:(prevState: any, queryData: FormData) => Promise<string>,times:Time[]}) => {
+export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNumber:number}) => {
+  const [opened,{open,close}] = useDisclosure(false);
+
   // DBに登録した後に，エラーハンドリングする用
-  const initResponse:any = {isSuccess:false};
   const [responseString,formAction] = useFormState(onSubmit,"{}");
   // useFormStateがplain Objectしか返せないから，パワー
   const response = JSON.parse(responseString) as submitResponse;
 
   return (
+    <>
+    <Modal opened={opened} onClose={close} size="auto" withCloseButton={false}>
+      <Success ticketNumber={response.data?.ticket_number}/>
+    </Modal>
+    <Button onClick={open}>Modal</Button>
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
@@ -170,5 +161,6 @@ export const Form = ({onSubmit,times}:{onSubmit:(prevState: any, queryData: Form
         </div>
       </div>
     </section>
+    </>
   );
 };

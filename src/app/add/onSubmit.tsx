@@ -1,6 +1,6 @@
 "use server";
 import type { Customer } from "@prisma/client";
-import {prisma} from "@/lib/prismaClient";
+import {getVariable, prisma} from "@/lib/prismaClient";
 
 export type submitResponse = {
     isSuccess: boolean;
@@ -21,8 +21,13 @@ export const onSubmit = async(prevState:any,queryData:FormData) => {
     console.log(timeString,name,adults,children,description);
     let response:submitResponse = {isSuccess:false};
     try{
+        // Ticket Numberの取得
+        const variable = await getVariable();
+        if(!variable)throw new Error("Variable is not found");
+        const currentTicketNumber = variable.current_ticket_number;
+        // Ticket Numberはインクリメント
         const newCustomer = await prisma.customer.create({
-            data: {name,timeString,adults,children,description},
+            data: {name,timeString,adults,children,description,ticket_number:currentTicketNumber+1},
         });
         response.isSuccess = true;
         response.data = newCustomer;
