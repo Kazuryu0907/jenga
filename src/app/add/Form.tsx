@@ -55,7 +55,7 @@ export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNu
   return (
     <>
     <Modal opened={opened} onClose={close} size="auto" withCloseButton={false}>
-      <Success ticketNumber={response.data?.ticket_number}/>
+      {response.data ? <Success data={response.data}/> : null}
     </Modal>
     <Button onClick={open}>Modal</Button>
     <section className="bg-gray-50 dark:bg-gray-900">
