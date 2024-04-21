@@ -1,4 +1,6 @@
-import { Customer } from "@prisma/client";
+"use client";
+import { Button,Modal } from "@mantine/core"
+import { MantineProvider } from "@mantine/core"
 
 const CheckIcon = () => {
   return(
@@ -8,17 +10,15 @@ const CheckIcon = () => {
   )
 }
 
-import pick from "lodash.pick";
-
-const Info = ({data}:{data:Customer}) => {
-  const infos = pick(data,["name","timeString","adults","children","description"]);
+const Info = () => {
+  const data = {name:"jack",time:"4/3 12:00",adults:1,children:2,remarks:""};
   return(
     <table className="m-3 w-full text-left">
       <tbody>
-        {infos.map(([key,value]) => (
+        {Object.entries(data).map(([key,value]) => (
           <tr key={key} className="border-b">
             <td>{key}</td>
-            <td>{data[key]}</td>
+            <td>{value}</td>
           </tr>
         ))}
       </tbody>
@@ -27,7 +27,7 @@ const Info = ({data}:{data:Customer}) => {
 }
 
 
-export function Success({data}:{data:Customer}) {
+export function Success({ticketNumber}:{ticketNumber:number|undefined}) {
   return (
     <div>
       <section className="bg-gray-50">
@@ -42,7 +42,7 @@ export function Success({data}:{data:Customer}) {
               </h1>
               <div>
                 <p className="text-lg font-normal text-gray-500 lg:text-xl">Ticket Number</p>
-                <div className="mt-8 flex justify-center"><span className="text-6xl font-extrabold text-blue-600">{data.ticket_number}</span></div>
+                <div className="mt-8 flex justify-center"><span className="text-6xl font-extrabold text-blue-600">{ticketNumber}</span></div>
               </div>
               <div className="border-b-2"></div>
               <div className="text-sm text-gray-500">
@@ -53,6 +53,22 @@ export function Success({data}:{data:Customer}) {
           </div>
         </div>
       </section>
+    </div>
+  )
+}
+
+import { useDisclosure } from "@mantine/hooks"
+
+export default function Home() {
+  const [opened,{open,close}] = useDisclosure(false);
+  return (
+    <div>
+      <MantineProvider>
+        <Modal opened={opened} onClose={close} size="auto" withCloseButton={false}>
+          <Success ticketNumber={11}/>
+        </Modal>
+        <Button onClick={open}>Modal</Button>
+      </MantineProvider>
     </div>
   )
 }
