@@ -11,14 +11,17 @@ const CheckIcon = () => {
 import pick from "lodash.pick";
 
 const Info = ({data}:{data:Customer}) => {
+  const getKeys = <T extends {[key:string]: unknown}>(obj:T):(keyof T)[] => {
+    return Object.keys(obj);
+  }
   const infos = pick(data,["name","timeString","adults","children","description"]);
   return(
     <table className="m-3 w-full text-left">
       <tbody>
-        {infos.map(([key,value]) => (
+        {getKeys(infos).map((key) => (
           <tr key={key} className="border-b">
             <td>{key}</td>
-            <td>{data[key]}</td>
+            <td>{infos[key]}</td>
           </tr>
         ))}
       </tbody>
@@ -47,7 +50,7 @@ export function Success({data}:{data:Customer}) {
               <div className="border-b-2"></div>
               <div className="text-sm text-gray-500">
                 <p className="text-md text-gray-500">Info</p>
-                <Info/>
+                <Info data={data}/>
               </div>
             </div>
           </div>
