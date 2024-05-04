@@ -9,7 +9,6 @@ import {Success} from './Success';
 
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
-import { ModalProvider } from './ModalProvider';
 export const revalidate = 60;
 
 
@@ -22,9 +21,7 @@ export default async function Home() {
   const currentTicketNumber = variable ? variable.current_ticket_number : -1;
   return (
     <div>
-      <ModalProvider>
-        <Form onSubmit={onSubmit} times={times} currentTicketNumber={currentTicketNumber}/>
-      </ModalProvider>
+      <Form onSubmit={onSubmit} times={times} currentTicketNumber={currentTicketNumber}/>
       <MantineProvider>
         <Notifications/>
         {/* <Button onClick={() => notifications.show({

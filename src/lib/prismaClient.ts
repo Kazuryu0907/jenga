@@ -1,6 +1,4 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import {cache} from "react";
-import useSWR from "swr";
 
 export * from "@prisma/client";
 
