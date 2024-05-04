@@ -26,11 +26,22 @@ export const onSubmit = async(prevState:any,queryData:FormData) => {
         if(!variable)throw new Error("Variable is not found");
         const currentTicketNumber = variable.current_ticket_number;
         // Ticket Numberはインクリメント
-        const newCustomer = await prisma.customer.create({
-            data: {name,timeString,adults,children,description,ticket_number:currentTicketNumber+1},
-        });
+        // トランザクションでCustomerを作成
+        const newCustomer = await prisma.$transaction(async (tx) => {
+            const newCustomer = await prisma.customer.create({
+                data: {name,timeString,adults,children,description,ticket_number:currentTicketNumber+1},
+            });
+            // Ticket Numberの更新
+            await prisma.variable.update({
+                where: {id:0},
+                data: {current_ticket_number:currentTicketNumber+1},
+            });
+            return newCustomer;
+        })
         response.isSuccess = true;
         response.data = newCustomer;
+        // Reset Form
+
     }catch(e){
         response.isSuccess = false;
         response.errorMessage = e as string;

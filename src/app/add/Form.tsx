@@ -4,8 +4,7 @@
 import { useFormState,useFormStatus } from "react-dom";
 import type {submitResponse} from "./onSubmit";
 import type { Time } from "@prisma/client";
-import { useDisclosure } from "@mantine/hooks";
-import { Modal,Button } from "@mantine/core";
+import { Modal } from "@mantine/core";
 
 const RequireAsterisk = () => {
   return <a className="text-red-600">*</a>;
@@ -25,7 +24,6 @@ const SubmitButton = () => {
   )
 }
 
-
 // DBから取得したTimeのリストをSelectタグに変換
 const SelectTime = ({times}:{times:Time[]}) => {
     return(
@@ -41,23 +39,36 @@ const SelectTime = ({times}:{times:Time[]}) => {
     )
 }
 
+export const SuccessModal = ({data}:{data:submitResponse}) => {
+  const [opened,{open,close}] = useDisclosure();
+  useEffect(() => {
+    if(data.isSuccess) open();
+  },[data]);
+  if(data.isSuccess == false) console.log("Error Occurred!!");
+  return(
+    <Modal opened={opened} onClose={close} size="auto" withCloseButton={false}>
+      {data.data ? <Success data={data.data}/> : null}
+    </Modal>
+  )
+}
+
 
 import {Success} from './Success';
+import { useEffect, useRef } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
 export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNumber:number}) => {
-  const [opened,{open,close}] = useDisclosure(false);
-
+  //*TODO FormReset用のRef 未実装 
+  const formRef = useRef<HTMLFormElement>(null);
   // DBに登録した後に，エラーハンドリングする用
   const [responseString,formAction] = useFormState(onSubmit,"{}");
   // useFormStateがplain Objectしか返せないから，パワー
   const response = JSON.parse(responseString) as submitResponse;
 
+  console.log(response.data);
   return (
     <>
-    <Modal opened={opened} onClose={close} size="auto" withCloseButton={false}>
-      {response.data ? <Success data={response.data}/> : null}
-    </Modal>
-    <Button onClick={open}>Modal</Button>
+    <SuccessModal data={response}/>
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
@@ -76,7 +87,7 @@ export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNu
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Registration
             </h1>
-            <form className="space-y-4 md:space-y-6" action={formAction}>
+            <form className="space-y-4 md:space-y-6" action={formAction} ref={formRef}>
               <div>
                 <label
                   htmlFor="time"
