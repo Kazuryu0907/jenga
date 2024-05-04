@@ -19,12 +19,12 @@ if(process.env.NODE_ENV === "production"){
 // Timesのデータ取得(force-cache)
 // Layoutかpageでrevalidate指定してね
 // https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries
-export const getTimes = cache(async() => {
+export const getTimes = (async() => {
     const times = await prisma.time.findMany();
     return times;
 });
 
 export const getVariable = async () => {
-    const variable = await prisma.variable.findFirst({where:{id:0}});
+    const variable = await prisma.variable.findUnique({where:{id:0}});
     return variable;
 }

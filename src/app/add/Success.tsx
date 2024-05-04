@@ -30,6 +30,7 @@ const Info = ({data}:{data:Customer}) => {
 }
 
 
+
 export function Success({data}:{data:Customer}) {
   return (
     <div>
