@@ -64,6 +64,8 @@ export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNu
   const [responseString,formAction] = useFormState(onSubmit,"{}");
   // useFormStateがplain Objectしか返せないから，パワー
   const response = JSON.parse(responseString) as submitResponse;
+  // Success時にFormをリセット
+  if(response.isSuccess) formRef.current?.reset();
 
   console.log(response.data);
   return (
