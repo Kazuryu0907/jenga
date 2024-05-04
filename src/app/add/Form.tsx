@@ -40,18 +40,13 @@ const SelectTime = ({times}:{times:Time[]}) => {
 }
 
 export const SuccessModal = ({data}:{data:submitResponse}) => {
-  // preIdとIdが違う時にModalを開く
-  const idRef = useRef(0);
-  // ProviderからくるModalのState
-  const {opened,setModal}:{opened:boolean,setModal:(n:boolean) => void} = useModalState();
-  console.log(data);
-  if(data.isSuccess && idRef.current != data.data?.id){
-    idRef.current = data.data?.id as number;
-    setModal(true);
-  }
+  const [opened,{open,close}] = useDisclosure();
+  useEffect(() => {
+    if(data.isSuccess) open();
+  },[data]);
   if(data.isSuccess == false) console.log("Error Occurred!!");
   return(
-    <Modal opened={opened} onClose={() => setModal(false)} size="auto" withCloseButton={false}>
+    <Modal opened={opened} onClose={close} size="auto" withCloseButton={false}>
       {data.data ? <Success data={data.data}/> : null}
     </Modal>
   )
@@ -59,8 +54,8 @@ export const SuccessModal = ({data}:{data:submitResponse}) => {
 
 
 import {Success} from './Success';
-import { useModalState } from "./ModalProvider";
-import { memo, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
 export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNumber:number}) => {
   //*TODO FormReset用のRef 未実装 
@@ -69,12 +64,11 @@ export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNu
   const [responseString,formAction] = useFormState(onSubmit,"{}");
   // useFormStateがplain Objectしか返せないから，パワー
   const response = JSON.parse(responseString) as submitResponse;
-  const MemoedModal = memo(SuccessModal);
 
   console.log(response.data);
   return (
     <>
-    <MemoedModal data={response}/>
+    <SuccessModal data={response}/>
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
