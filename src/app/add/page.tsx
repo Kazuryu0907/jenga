@@ -9,18 +9,22 @@ import {Success} from './Success';
 
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
-
+import { ModalProvider } from './ModalProvider';
 export const revalidate = 60;
+
 
 // こいつはServer ComponentだからAsyncが使える
 export default async function Home() {
   // Variableはid=0で固定
   const [times,variable] = await Promise.all([getTimes(),getVariable()]);
+
   console.log(times,variable);
   const currentTicketNumber = variable ? variable.current_ticket_number : -1;
   return (
     <div>
-      <Form onSubmit={onSubmit} times={times} currentTicketNumber={currentTicketNumber}/>
+      <ModalProvider>
+        <Form onSubmit={onSubmit} times={times} currentTicketNumber={currentTicketNumber}/>
+      </ModalProvider>
       <MantineProvider>
         <Notifications/>
         {/* <Button onClick={() => notifications.show({
