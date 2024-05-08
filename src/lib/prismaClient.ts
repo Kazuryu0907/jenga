@@ -9,7 +9,7 @@ globalPrisma.prisma || new PrismaClient({
     log: process.env.NODE_ENV === "development" ? ["query", "info", "warn"] : ["error"],
 });
 
-if(process.env.NODE_ENV === "production"){
+if(process.env.NODE_ENV !== "production"){
     globalPrisma.prisma = prisma;
 }
 
