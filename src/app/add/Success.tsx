@@ -1,4 +1,5 @@
 import { Customer } from "@prisma/client";
+import pick from "lodash.pick";
 
 const CheckIcon = () => {
   return(
@@ -7,8 +8,6 @@ const CheckIcon = () => {
     </svg>
   )
 }
-
-import pick from "lodash.pick";
 
 const Info = ({data}:{data:Customer}) => {
   const getKeys = <T extends {[key:string]: unknown}>(obj:T):(keyof T)[] => {
@@ -28,8 +27,6 @@ const Info = ({data}:{data:Customer}) => {
     </table>
   )
 }
-
-
 
 export function Success({data}:{data:Customer}) {
   return (
