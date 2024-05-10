@@ -1,4 +1,4 @@
-import { getTimes, getVariable, prisma } from '@/lib/prismaClient';
+import { getTimes, getVariable, prisma,prismaWithPulse } from '@/lib/prismaClient';
 import type { Customer,Time } from '@/lib/prismaClient';
 import { onSubmit } from './onSubmit';
 import {Button} from '@mantine/core';
@@ -16,7 +16,6 @@ export const revalidate = 60;
 export default async function Home() {
   // Variableはid=0で固定
   const [times,variable] = await Promise.all([getTimes(),getVariable()]);
-
   console.log(times,variable);
   const currentTicketNumber = variable ? variable.current_ticket_number : -1;
   return (
