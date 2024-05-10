@@ -3,8 +3,9 @@ import type {Customer} from "@prisma/client";
 import SumiSVG from "./sumi.svg";
 import { useEffect, useState } from "react";
 import { fetchAllCustomers, subscribeFor, updateCheckedById } from "./subscribe";
-import type {subscriptionType} from "./subscribe";
 import { supabase } from "@/lib/supabaseClient";
+
+import {notifications} from "@mantine/notifications";
 
 const CustomerCard = ({customer,onClick}:{customer:Customer,onClick:()=>void}) => {
   const {ticket_number,name,description,children,adults,checked} = customer;
@@ -153,6 +154,13 @@ const originalCustomers:Customer[] = [
   }
 ]
 
+const showCustomerNotification = (customer:Customer) => {
+  notifications.show({
+    title:"New Customer has added!",
+    message:`Ticket:${customer.id} Name:${customer.name} Time:${customer.timeString}`
+  });
+}
+
 const splitTime = (customers:Customer[]) => {
   const splitCustomers = new Map<string,Customer[]>();
   customers.map(c => {
@@ -174,26 +182,24 @@ export function Cards({initCustomers}:{initCustomers:Customer[]}){
   const [customers,setCustomers] = useState(initCustomers);
   //! TimeごとのCustomer合計の表示 
   // Subscriptionの起動
-  // useEffect(() => {
-  //   const callback = async(c:Customer) => {
-  //     console.log(`New Customer!:${c.name}`);
-  //     const fetchedCustomers = await fetchAllCustomers();
-  //     console.log(fetchedCustomers);
-  //     // 一応immutableを返しとく
-  //     setCustomers(fetchedCustomers.map(c => c));
-  //   }
-  //   subscribeFor().then(c => {
-  //     if(c)callback(c);
-  //   });
-  // },[customers]);
   useEffect(() => {
-  supabase.channel("Customer").on("postgres_changes",{event:"INSERT",schema:"public",table:"Customer"},(payload) => {
-    console.log(`New Customer!:${payload.new.name}`);
-    fetchAllCustomers().then(c => {
-      console.log(c);
-      setCustomers(c);
-    })
-  }).subscribe();
+    supabase.channel("Customer").on("postgres_changes",{event:"INSERT",schema:"public",table:"Customer"},(payload) => {
+      //* 更新時
+      console.log(`New Customer!:${payload.new.name}`);
+      fetchAllCustomers().then(c => {
+        // これだとO(n)で処理できそう
+        // idはuniqueかつnumberなので，足し合わせて差分でid取得
+        const preIdSum = customers.reduce((acc,c) => acc + c.id,0);
+        const newIdSum = c.reduce((acc,_c) => acc + _c.id,0);
+        const newAddedId = newIdSum - preIdSum; 
+        console.log(newAddedId);
+        const newAddedCustomer = c.filter(_c => _c.id == newAddedId)[0];
+        console.log(newAddedCustomer);
+        // Notificationを表示
+        showCustomerNotification(newAddedCustomer);
+        setCustomers(c);
+      })
+    }).subscribe();
   },[]);
 
   const splitTimeCustomers = splitTime(customers);
