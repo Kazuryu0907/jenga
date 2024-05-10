@@ -10,7 +10,8 @@
     "@mantine/hooks": "^7.8.0",
     "@mantine/notifications": "^7.8.0",
     "@prisma/client": "^5.13.0",
-    "@prisma/extension-pulse": "^1.0.1",
+    "@prisma/extension-pulse": "^1.0.2",
+    "@supabase/supabase-js": "^2.43.1",
     "@types/lodash": "^4.17.0",
     "hono": "^4.2.3",
     "lodash": "^4.17.21",
@@ -21,6 +22,7 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@types/bun": "latest",
     "@types/lodash.pick": "^4.4.9",
     "@types/node": "^20.12.7",
