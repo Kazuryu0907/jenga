@@ -1,4 +1,5 @@
 import {Cards} from "./Cards";
+import {Customers} from "./Customers";
 import {prisma} from "../../lib/prismaClient";
 import {TimeComponent} from "./TimeComponent";
 import {subscribeFor} from "./subscribe";
@@ -15,8 +16,9 @@ export default async function Home() {
   // subscribeFor();
   return (
     <div>
-      <TimeComponent customers={customers}/>
-      <Cards initCustomers={customers}/>
+      {/* <TimeComponent customers={customers}/> */}
+      {/* <Cards initCustomers={customers}/> */}
+      <Customers initCustomers={customers}/>
     </div>
   )
 }

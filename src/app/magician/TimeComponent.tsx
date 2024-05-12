@@ -3,7 +3,7 @@
 import { Customer } from "@prisma/client";
 import {createContext, useState} from "react";
 import { Button } from "@mantine/core";
-const TimeContext = createContext("");
+export const TimeContext = createContext("");
 
 const splitTime = (customers:Customer[]) => {
   const splitCustomers = new Map<string,Customer[]>();
@@ -21,17 +21,23 @@ const splitTime = (customers:Customer[]) => {
   return splitCustomers;
 }
 
-export function TimeComponent({customers}:{customers:Customer[]}){
+export function TimeComponent({customers,children}:{customers:Customer[],children:React.ReactNode}){
   const [time,setTime] = useState(customers[0].timeString);
   const splitTimeCustomers = splitTime(customers);
   const splitTimeKeys = splitTimeCustomers.keys();
-  const TimeButtons = Array.from(splitTimeKeys).map(time => {
-    return <Button key={time} onClick={() => setTime(time)}>{time}</Button>
+  const TimeButtons = Array.from(splitTimeKeys).map(t => {
+    const customerSum = splitTimeCustomers.get(t)?.reduce((acc,c) => acc + c.children + c.adults,0);
+    return (
+      <Button key={t} onClick={() => setTime(t)} color={time != t ? "gray" : "blue"}>
+        {customerSum}人<br/>
+        {t}
+      </Button>
+    )
   });
-  console.log(time);
   return(
     <TimeContext.Provider value={time}>
       {TimeButtons}
+      {children}
     </TimeContext.Provider>
   )
 }

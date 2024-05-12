@@ -1,9 +1,10 @@
 "use client";
 import type {Customer} from "@prisma/client";
 import SumiSVG from "./sumi.svg";
-import { useEffect, useState } from "react";
-import { fetchAllCustomers, subscribeFor, updateCheckedById } from "./subscribe";
+import { useEffect, useState, useContext } from "react";
+import { fetchAllCustomers, updateCheckedById } from "./subscribe";
 import { supabase } from "@/lib/supabaseClient";
+import { TimeContext } from "./TimeComponent";
 
 import {notifications} from "@mantine/notifications";
 
@@ -180,6 +181,7 @@ const splitTime = (customers:Customer[]) => {
 export function Cards({initCustomers}:{initCustomers:Customer[]}){
   // originalCustomersはsortedのつもり
   const [customers,setCustomers] = useState(initCustomers);
+  const time = useContext(TimeContext);
   //! TimeごとのCustomer合計の表示 
   // Subscriptionの起動
   useEffect(() => {
@@ -238,9 +240,22 @@ export function Cards({initCustomers}:{initCustomers:Customer[]}){
       </div>
     )
   })
+
+  const SelectedTimeCustomers = (time:string) => {
+    return(
+      <div>
+        {splitTimeCustomers.get(time)?.map(c => 
+          <div key={c.id}>
+            <CustomerCard onClick={() => onClickHandle(c.id)} key={c.id} customer={c}/>
+          </div>
+        )}
+      </div>
+    )
+  };
   return(
     <div>
-      {SplitTimeCustomersCard}
+      {time}
+      {SelectedTimeCustomers(time)}
     </div>
   );
 }
