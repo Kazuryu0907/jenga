@@ -32,3 +32,8 @@ model Time{
   time String @unique
   customers Customer[]
 }
+
+model Variable{
+  id Int @id @default(0)
+  current_ticket_number Int @default(0)
+}
