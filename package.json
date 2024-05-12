@@ -3,7 +3,8 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
-    "dev": "next dev"
+    "dev": "next dev",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@mantine/core": "^7.8.0",
