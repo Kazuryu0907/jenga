@@ -36,6 +36,7 @@ export function Customers({initCustomers}:{initCustomers:Customer[]}){
         console.log(newAddedCustomer);
         // Notificationを表示
         showCustomerNotification(newAddedCustomer);
+        console.log(c);
         setCustomers(c.map(c => c));
       })
     }).subscribe();
