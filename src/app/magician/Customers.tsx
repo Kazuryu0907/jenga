@@ -6,7 +6,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { TimeComponent,TimeContext } from "./TimeComponent";
 import { Cards } from "./Cards";
 import {notifications} from "@mantine/notifications";
-
+import { flushSync } from "react-dom";
+import {useWhatChanged, setUseWhatChange} from "@simbathesailor/use-what-changed";
 
 const showCustomerNotification = (customer:Customer) => {
   notifications.show({
@@ -19,10 +20,13 @@ const showCustomerNotification = (customer:Customer) => {
 export function Customers({initCustomers}:{initCustomers:Customer[]}){
   // originalCustomersはsortedのつもり
   const [customers,setCustomers] = useState(initCustomers);
+  setUseWhatChange(process.env.NODE_ENV ===  "development");
+  useWhatChanged([customers]);
   //! TimeごとのCustomer合計の表示 
   // Subscriptionの起動
   useEffect(() => {
-    supabase.channel("Customer").on("postgres_changes",{event:"INSERT",schema:"public",table:"Customer"},(payload) => {
+    const channel = supabase.channel("Customer");
+    channel.on("postgres_changes",{event:"INSERT",schema:"public",table:"Customer"},(payload) => {
       //* 更新時
       console.log(`New Customer!:${payload.new.name}`);
       fetchAllCustomers().then(c => {
@@ -37,15 +41,18 @@ export function Customers({initCustomers}:{initCustomers:Customer[]}){
         // Notificationを表示
         showCustomerNotification(newAddedCustomer);
         console.log(c);
-        setCustomers(c.map(c => c));
+        setCustomers(c);
       })
     }).subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    }
   },[]);
 
   return(
     <div>
       <TimeComponent customers={customers}>
-        <Cards initCustomers={customers}/>
+        <Cards customers={customers} setCustomers={setCustomers}/>
       </TimeComponent>
     </div>
   );

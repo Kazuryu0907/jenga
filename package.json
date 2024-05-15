@@ -24,6 +24,7 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
+    "@simbathesailor/use-what-changed": "^2.0.0",
     "@svgr/webpack": "^8.1.0",
     "@types/bun": "latest",
     "@types/lodash.pick": "^4.4.9",

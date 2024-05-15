@@ -178,38 +178,15 @@ const splitTime = (customers:Customer[]) => {
   return splitCustomers;
 }
 
-export function Cards({initCustomers}:{initCustomers:Customer[]}){
-  // originalCustomersはsortedのつもり
-  const [customers,setCustomers] = useState(initCustomers);
+export function Cards({customers,setCustomers}:{customers:Customer[],setCustomers:(c:Customer[]) => void}){
+  // customersはsorted
   const time = useContext(TimeContext);
-  //! TimeごとのCustomer合計の表示 
-  // Subscriptionの起動
-  useEffect(() => {
-    supabase.channel("Customer").on("postgres_changes",{event:"INSERT",schema:"public",table:"Customer"},(payload) => {
-      //* 更新時
-      console.log(`New Customer!:${payload.new.name}`);
-      fetchAllCustomers().then(c => {
-        // これだとO(n)で処理できそう
-        // idはuniqueかつnumberなので，足し合わせて差分でid取得
-        const preIdSum = customers.reduce((acc,c) => acc + c.id,0);
-        const newIdSum = c.reduce((acc,_c) => acc + _c.id,0);
-        const newAddedId = newIdSum - preIdSum; 
-        console.log(newAddedId);
-        const newAddedCustomer = c.filter(_c => _c.id == newAddedId)[0];
-        console.log(newAddedCustomer);
-        // Notificationを表示
-        showCustomerNotification(newAddedCustomer);
-        setCustomers(c);
-      })
-    }).subscribe();
-  },[]);
 
   const splitTimeCustomers = splitTime(customers);
-  const splitTimeKeys = splitTimeCustomers.keys();
 
   //* =======HandleClick====================== 
+  // クリックされたStateのcheckedを反転させる
   const updateCustomers = (id:number) => {
-    // クリックされたStateのcheckedを反転させる
     const changedCheckedCustomer = customers.map(c => (c.id == id ? {...c,checked:!c.checked} : c));
     setCustomers(changedCheckedCustomer);
   }
@@ -220,26 +197,6 @@ export function Cards({initCustomers}:{initCustomers:Customer[]}){
     console.log(res);
   }
 
-  // Mapのkeyを使ってCustomerCardを作る(Mapだとmap使えなかったからArrayに変換して使った)
-  const SplitTimeCustomersCard = Array.from(splitTimeKeys).map(time => {
-    const splitCustomers = splitTimeCustomers.get(time);
-    return(
-      <div key={time}>
-        <h1>{time}</h1>
-        <div>
-        {splitCustomers && splitCustomers.map(c => {
-            return(
-            <div className="mb-1" key={c.id}>
-            {/* idが一致したCustomerのcheckedのみを反転させるFunction */}
-              <CustomerCard onClick={() => onClickHandle(c.id)} key={c.id} customer={c}/>
-            </div>
-            )
-        }
-        )}
-        </div>
-      </div>
-    )
-  })
 
   const SelectedTimeCustomers = (time:string) => {
     return(
