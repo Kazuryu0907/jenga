@@ -21,8 +21,9 @@ export const EditModal = ({initTimes,initTicketNumber,children}:{initTimes:Time[
       message,
     });
   }
+  // *======================ONSUBMIT========== 
   const onSubmit = () => {
-    console.log(editValue);
+
     if(editValue.type === "newTime"){
       addTime(editValue.value)
       .then((e) => {
@@ -31,6 +32,7 @@ export const EditModal = ({initTimes,initTicketNumber,children}:{initTimes:Time[
       .catch(console.error);
       // timesを更新
       getTimes().then(times => setTimes(times));
+
     }else if(editValue.type === "time"){
       updateTime(editValue.id,editValue.value).then(e => {
           console.log(e);
@@ -38,6 +40,7 @@ export const EditModal = ({initTimes,initTicketNumber,children}:{initTimes:Time[
         );
       // timesを更新
       getTimes().then(times => setTimes(times));
+
     }else if(editValue.type === "ticket"){
       updateTicket(editValue.value)
       .then((e) => {
