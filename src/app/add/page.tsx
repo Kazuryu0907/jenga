@@ -14,7 +14,7 @@ export default async function Home() {
   const customers = await prismaWithPulse.customer.findMany();
   return (
     <div>
-      <Form onSubmit={onSubmit} times={times} currentTicketNumber={currentTicketNumber}/>
+      <Form onSubmit={onSubmit} times={times} customers={customers} currentTicketNumber={currentTicketNumber}/>
       <h1 className='text-center font-bold text-2xl my-3'>Customers</h1>
       <CustomersTable initCustomers={customers}/>
     </div>

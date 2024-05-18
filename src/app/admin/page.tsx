@@ -11,15 +11,15 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1 className="font-bold text-3xl ">Welcome back, admin!</h1>
 
-      <EditModal>
+      <EditModal initTimes={times} initTicketNumber={currentTicketNumber}>
         <div className="flex my-auto w-full justify-center">
           <div className="max-w-md p-5 shadow rounded-md w-full mx-5">
             <p className="text-xl font-bold">Time Config</p>
-            <TimeTable times={times}/>
+            <TimeTable/>
           </div>
           <div className="mx-5 shadow p-5 rounded-md max-w-md w-full">
             <p className="text-xl font-bold">Ticket Config</p>
-            <TicketTable currentTicketNum={currentTicketNumber}/>
+            <TicketTable/>
           </div>
         </div>
       </EditModal>
