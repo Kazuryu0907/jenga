@@ -33,3 +33,7 @@ export const getVariable = async () => {
     const variable = await prisma.variable.findUnique({where:{id:0}});
     return variable;
 }
+
+export const delCustomer = async(id:number) => {
+    return await prisma.customer.delete({where:{id}});
+}

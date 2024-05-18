@@ -3,8 +3,8 @@
 
 import { useFormState,useFormStatus } from "react-dom";
 import type {submitResponse} from "./onSubmit";
-import type { Time } from "@prisma/client";
-import { Modal } from "@mantine/core";
+import type { Customer, Time } from "@prisma/client";
+import { Button, Card, Modal } from "@mantine/core";
 
 const RequireAsterisk = () => {
   return <a className="text-red-600">*</a>;
@@ -57,7 +57,39 @@ import {Success} from './Success';
 import { useEffect, useRef } from "react";
 import { useDisclosure } from "@mantine/hooks";
 
-export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNumber:number}) => {
+const splitTime = (customers:Customer[]) => {
+  const splitCustomers = new Map<string,Customer[]>();
+  customers.map(c => {
+    let customers = splitCustomers.get(c.timeString);
+    if(!customers){
+      // 初回は[customer]を挿入
+      splitCustomers.set(c.timeString,[c]);
+    }
+    else{
+      customers.push(c);
+      splitCustomers.set(c.timeString,customers);
+    }
+  })
+  return splitCustomers;
+}
+
+const TimeComponent = ({customers,times}:{customers:Customer[],times:Time[]}) => {
+  const splitTimeCustomers = splitTime(customers);
+  const TimeButtons = times.map(t => {
+    const customerSum = splitTimeCustomers.get(t.time)?.reduce((acc,c) => acc + c.children + c.adults,0);
+    return (
+      <Button key={t.time} variant="light">
+        {customerSum}人<br/>
+        {t.time}
+      </Button>
+    )});
+  return (
+    <div className="flex space-x-2 mb-2">
+      {TimeButtons}
+    </div>
+  )
+}
+export const Form = ({onSubmit,times,customers}:{onSubmit:any,customers:Customer[],times:Time[],currentTicketNumber:number}) => {
   //*TODO FormReset用のRef 未実装 
   const formRef = useRef<HTMLFormElement>(null);
   // DBに登録した後に，エラーハンドリングする用
@@ -73,6 +105,7 @@ export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNu
     <SuccessModal data={response}/>
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <TimeComponent times={times} customers={customers}/>
         <a
           href="#"
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
