@@ -4,23 +4,33 @@ import { Table,ActionIcon,ScrollArea } from "@mantine/core";
 import {modals} from "@mantine/modals";
 import { IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
+import { delCustomer } from "@/lib/serverActionPrisma";
+import { notifications } from "@mantine/notifications";
 
-
-const openModal = (customer:Customer) => modals.openConfirmModal({
-  title: "Delete customer",
-  children: (
-    <p>Are you sure you want to delete <span className="text-cyan-600 font-bold">{customer.name}</span> ?</p>
-  ),
-  labels: { cancel: "Cancel", confirm: "Delete" },
-  confirmProps:{color:"red"},
-  onConfirm: () => {
-    console.log("Delete customer with id", customer.id);
-  },
-  onCancel: () => {},
-})
 
 export function CustomersTable({initCustomers}:{initCustomers:Customer[]}) {
   const [customers,setCustomers] = useState(initCustomers);
+
+  const openModal = (customer:Customer) => modals.openConfirmModal({
+    title: "Delete customer",
+    children: (
+      <p>Are you sure you want to delete <span className="text-cyan-600 font-bold">{customer.name}</span> ?</p>
+    ),
+    labels: { cancel: "Cancel", confirm: "Delete" },
+    confirmProps:{color:"red"},
+    onConfirm: () => {
+      delCustomer(customer.id)
+      .then((c) => {
+        notifications.show({title:"Success",message:`Deleted ${c.name}`,color:"green"});
+        setCustomers(customers.filter((c) => c.id !== customer.id));  
+      })
+      .catch(e => {
+        notifications.show({title:"Error",message:e.message,color:"red"})
+        console.log(e);
+      });
+    },
+    onCancel: () => {},
+  })
 
   const rows = customers.map((c) => (
     <Table.Tr key={c.id}>

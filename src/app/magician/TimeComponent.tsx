@@ -36,8 +36,11 @@ export function TimeComponent({customers,children}:{customers:Customer[],childre
   });
   return(
     <TimeContext.Provider value={time}>
-      {TimeButtons}
-      {children}
+      {/* //! あとでCSS */}
+      <div className="">
+        {TimeButtons}
+        {children}
+      </div>
     </TimeContext.Provider>
   )
 }
