@@ -79,8 +79,8 @@ const TimeComponent = ({customers,times}:{customers:Customer[],times:Time[]}) =>
     const customerSum = splitTimeCustomers.get(t.time)?.reduce((acc,c) => acc + c.children + c.adults,0);
     return (
       <Button key={t.time} variant="light">
-        {t.time}<br/>
-        {customerSum}人
+        {customerSum}人<br/>
+        {t.time}
       </Button>
     )});
   return (
