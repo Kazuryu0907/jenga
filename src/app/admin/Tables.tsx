@@ -4,8 +4,8 @@ import {Time} from "@prisma/client";
 import { IconEdit, IconCirclePlus } from "@tabler/icons-react"
 import {ActionIcon, Input, NumberInput} from "@mantine/core";
 import {modals} from "@mantine/modals";
-import { useState ,Dispatch,SetStateAction, useContext, use} from "react";
-import {EditContext,OpenModalContext} from "./editContext";
+import { useState ,Dispatch,SetStateAction, useContext} from "react";
+import {EditContext,OpenModalContext,TimesContext,TicketNumberContext} from "./editContext";
 
 const FormModal = ({currentValue,setValue}:{currentValue:string|number,setValue:Dispatch<SetStateAction<string>>}) => {
   return (
@@ -15,23 +15,11 @@ const FormModal = ({currentValue,setValue}:{currentValue:string|number,setValue:
    )
 }
 
-// ! contextModalで，useFormでも使う
-const modal = (currentValue:string|number,value:string,setValue:Dispatch<SetStateAction<string>>) => modals.openConfirmModal({
-  title: "Edit",
-  children: (
-    // <div>
-    //   {typeof currentValue === "string" ? <Input defaultValue={currentValue}/> :  <NumberInput defaultValue={currentValue}/>}
-    // </div>
-    <FormModal currentValue={currentValue} setValue={setValue}/>
-  ),
-  labels: { cancel: "Cancel", confirm: "Submit" },
-  onConfirm: () => {console.log(value)},
-  confirmProps:{color:"cyan"},
-});
 
-export const TimeTable = ({times}:{times:Time[]}) => {
+export const TimeTable = () => {
   const setEditValue = useContext(EditContext);
   const openModal = useContext(OpenModalContext);
+  const times = useContext(TimesContext);
   const clickHandler = (time:Time) => {
     setEditValue({type:"time",value:time.time,id:time.id});
     openModal(true);
@@ -79,9 +67,10 @@ export const TimeTable = ({times}:{times:Time[]}) => {
   )
 }
 
-export const TicketTable = ({currentTicketNum}:{currentTicketNum:number}) => {
+export const TicketTable = () => {
   const setEditValue = useContext(EditContext);
   const openModal = useContext(OpenModalContext);
+  const currentTicketNum = useContext(TicketNumberContext);
   const clickHandler = () => {
     // VariableTableのidは0固定
     setEditValue({type:"ticket",value:currentTicketNum,id:0});
