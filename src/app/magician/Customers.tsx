@@ -6,8 +6,6 @@ import { supabase } from "@/lib/supabaseClient";
 import { TimeComponent,TimeContext } from "./TimeComponent";
 import { Cards } from "./Cards";
 import {notifications} from "@mantine/notifications";
-import { flushSync } from "react-dom";
-import {useWhatChanged, setUseWhatChange} from "@simbathesailor/use-what-changed";
 
 const showCustomerNotification = (customer:Customer) => {
   notifications.show({
@@ -20,8 +18,6 @@ const showCustomerNotification = (customer:Customer) => {
 export function Customers({initCustomers}:{initCustomers:Customer[]}){
   // originalCustomersはsortedのつもり
   const [customers,setCustomers] = useState(initCustomers);
-  setUseWhatChange(process.env.NODE_ENV ===  "development");
-  useWhatChanged([customers]);
   //! TimeごとのCustomer合計の表示 
   // Subscriptionの起動
   useEffect(() => {
