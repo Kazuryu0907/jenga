@@ -20,7 +20,7 @@ const splitTime = (customers:Customer[]) => {
 }
 
 export const TimeComponent = ({times}:{times:Time[]}) => {
-  const [customers,setCustomers] = useContext(CustomerContext);
+  const customers = useContext(CustomerContext);
   const splitTimeCustomers = splitTime(customers);
   const TimeButtons = times.map(t => {
     const customerSum = splitTimeCustomers.get(t.time)?.reduce((acc,c) => acc + c.children + c.adults,0);
