@@ -2,6 +2,7 @@ import { getTimes, getVariable, prisma,prismaWithPulse } from '@/lib/prismaClien
 import { onSubmit } from './onSubmit';
 import {Form} from './Form';
 import {CustomersTable} from './Table';
+import { CustomerWrapper } from './CustomerWrapper';
 export const revalidate = 60;
 
 
@@ -14,9 +15,11 @@ export default async function Home() {
   const customers = await prismaWithPulse.customer.findMany();
   return (
     <div>
-      <Form onSubmit={onSubmit} times={times} customers={customers} currentTicketNumber={currentTicketNumber}/>
-      <h1 className='text-center font-bold text-2xl my-3'>Customers</h1>
-      <CustomersTable initCustomers={customers}/>
+      <CustomerWrapper initCustomers={customers}>
+        <Form onSubmit={onSubmit} times={times} currentTicketNumber={currentTicketNumber}/>
+        <h1 className='text-center font-bold text-2xl my-3'>Customers</h1>
+        <CustomersTable/>
+      </CustomerWrapper>
     </div>
   )
 }
