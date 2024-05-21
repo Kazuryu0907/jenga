@@ -1,6 +1,10 @@
 "use server";
 import {prismaWithPulse} from "./prismaClient";
 
+export const getCustomers = async () => {
+    return await prismaWithPulse.customer.findMany();
+}
+
 export const delCustomer = async(id:number) => {
     return await prismaWithPulse.customer.delete({where:{id}});
 }
@@ -17,4 +21,13 @@ export const getTimes = async () => {
 }
 export const updateTime = async(id:number,time:string) => {
     return await prismaWithPulse.time.update({where:{id},data:{time}});
+}
+export async function fetchAllCustomers(){
+  const customers = await prismaWithPulse.customer.findMany({
+    orderBy:[
+      { ticket_number:"asc"},
+      { timeString:"asc" }
+    ]
+  });
+  return customers;
 }

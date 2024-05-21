@@ -3,13 +3,14 @@ import { Customer } from "@prisma/client";
 import { Table,ActionIcon,ScrollArea } from "@mantine/core";
 import {modals} from "@mantine/modals";
 import { IconTrash } from "@tabler/icons-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { delCustomer } from "@/lib/serverActionPrisma";
 import { notifications } from "@mantine/notifications";
+import { CustomerContext,SetCustomerContext } from "./CustomerWrapper";
 
-
-export function CustomersTable({initCustomers}:{initCustomers:Customer[]}) {
-  const [customers,setCustomers] = useState(initCustomers);
+export function CustomersTable() {
+  const customers = useContext(CustomerContext); 
+  const setCustomers = useContext(SetCustomerContext);
 
   const openModal = (customer:Customer) => modals.openConfirmModal({
     title: "Delete customer",
