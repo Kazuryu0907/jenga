@@ -29,15 +29,16 @@ export const EditModal = ({initTimes,initTicketNumber,children}:{initTimes:Time[
       .then((e) => {
         console.log(e);
         showCustomerNotification("New Time has been added!",`Time:${editValue.value}`);})
-      .catch(console.error);
+      .catch(e => showCustomerNotification("Error Occurred!",e.message));
       // timesを更新
       getTimes().then(times => setTimes(times));
 
     }else if(editValue.type === "time"){
-      updateTime(editValue.id,editValue.value).then(e => {
+      updateTime(editValue.id,editValue.value)
+      .then(e => {
           console.log(e);
-          showCustomerNotification("Time has been updated!",`Time:${editValue.value}`);}
-        );
+          showCustomerNotification("Time has been updated!",`Time:${editValue.value}`);})
+      .catch(e => showCustomerNotification("Error Occurred!",e.message));
       // timesを更新
       getTimes().then(times => setTimes(times));
 
@@ -46,7 +47,7 @@ export const EditModal = ({initTimes,initTicketNumber,children}:{initTimes:Time[
       .then((e) => {
         console.log(e);
         showCustomerNotification("Ticket Number has been updated!",`New Ticket Number:${editValue.value}`);})
-      .catch(console.error);
+      .catch(e => showCustomerNotification("Error Occurred!",e.message));
       // ticketを更新
       setTicket(editValue.value);
     }

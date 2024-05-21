@@ -63,7 +63,6 @@ import { TimeComponent } from "./TimeComponent";
 export const Form = ({onSubmit,times}:{onSubmit:any,times:Time[],currentTicketNumber:number}) => {
   //*TODO FormReset用のRef 未実装 
   const formRef = useRef<HTMLFormElement>(null);
-  const [customers,setCustomers] = useContext(CustomerContext);
   // DBに登録した後に，エラーハンドリングする用
   const [responseString,formAction] = useFormState(onSubmit,"{}");
   // useFormStateがplain Objectしか返せないから，パワー

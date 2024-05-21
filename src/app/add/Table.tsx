@@ -6,10 +6,11 @@ import { IconTrash } from "@tabler/icons-react";
 import { useContext, useState } from "react";
 import { delCustomer } from "@/lib/serverActionPrisma";
 import { notifications } from "@mantine/notifications";
-import { CustomerContext } from "./CustomerWrapper";
+import { CustomerContext,SetCustomerContext } from "./CustomerWrapper";
 
 export function CustomersTable() {
-  const [customers,setCustomers] = useContext(CustomerContext); 
+  const customers = useContext(CustomerContext); 
+  const setCustomers = useContext(SetCustomerContext);
 
   const openModal = (customer:Customer) => modals.openConfirmModal({
     title: "Delete customer",
